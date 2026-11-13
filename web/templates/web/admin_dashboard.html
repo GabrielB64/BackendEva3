@@ -1,0 +1,359 @@
+
+{% extends 'web/base.html' %}
+
+{% block title %}Administración | Dulce Arte{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-1">Panel de administración</h2>
+            <p class="text-muted mb-0">
+                Gestión general de Dulce Arte
+            </p>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'crear_cliente' %}" class="btn btn-outline-primary">
+                Nuevo cliente
+            </a>
+
+            <a href="{% url 'crear_pedido' %}" class="btn btn-primary">
+                Nuevo pedido
+            </a>
+
+            <a href="/admin/" class="btn btn-dark">
+                Administración avanzada
+            </a>
+        </div>
+    </div>
+
+    <!-- Indicadores -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted mb-2">Total de pedidos</div>
+                    <h2 class="fw-bold">{{ total_pedidos }}</h2>
+                    <span class="text-muted small">Pedidos registrados</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted mb-2">Cotizaciones pendientes</div>
+                    <h2 class="fw-bold text-warning">{{ pedidos_cotizacion }}</h2>
+                    <span class="text-muted small">Esperando confirmación</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted mb-2">Pedidos confirmados</div>
+                    <h2 class="fw-bold text-primary">{{ pedidos_confirmados }}</h2>
+                    <span class="text-muted small">Pedidos aceptados</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted mb-2">Órdenes en producción</div>
+                    <h2 class="fw-bold text-info">{{ ordenes_produccion }}</h2>
+                    <span class="text-muted small">Órdenes aún no listas</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted mb-2">Despachos pendientes</div>
+                    <h2 class="fw-bold text-secondary">{{ despachos_pendientes }}</h2>
+                    <span class="text-muted small">Pendientes o en ruta</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted mb-2">Alertas de inventario</div>
+                    <h2 class="fw-bold text-danger">{{ insumos_bajos }}</h2>
+                    <span class="text-muted small">Insumos bajo el mínimo</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<div class="mb-4">
+    <h4 class="fw-bold mb-3">Crear y registrar</h4>
+
+    <div class="row g-3">
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="{% url 'crear_cliente' %}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Nuevo cliente</h5>
+                        <p class="text-muted small mb-0">
+                            Registrar datos de contacto y dirección.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="{% url 'crear_pedido' %}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Nuevo pedido</h5>
+                        <p class="text-muted small mb-0">
+                            Crear cotizaciones con productos y especificaciones.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="/admin/pedidos/producto/add/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Nuevo producto</h5>
+                        <p class="text-muted small mb-0">
+                            Registrar productos y precios.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="/admin/inventario/insumo/add/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Nuevo insumo</h5>
+                        <p class="text-muted small mb-0">
+                            Registrar ingredientes y niveles de stock.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="/admin/inventario/recetabom/add/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Nueva receta BOM</h5>
+                        <p class="text-muted small mb-0">
+                            Asociar ingredientes y cantidades a un producto.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="/admin/usuarios/usuario/add/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Nuevo usuario</h5>
+                        <p class="text-muted small mb-0">
+                            Crear cuentas y asignar roles.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="{% url 'crear_despacho' %}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Nuevo despacho</h5>
+                        <p class="text-muted small mb-0">
+                            Asignar pedidos listos a repartidores.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        
+
+    </div>
+</div>
+
+
+    <!-- Accesos rápidos -->
+    <h4 class="fw-bold mb-3">Gestión del negocio</h4>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="/pedidos/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Pedidos</h5>
+                        <p class="text-muted small mb-0">
+                            Consultar pedidos y gestionar cotizaciones.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="/produccion/kanban/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Producción</h5>
+                        <p class="text-muted small mb-0">
+                            Consultar el tablero Kanban de cocina.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="/despachos/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Despachos</h5>
+                        <p class="text-muted small mb-0">
+                            Gestionar entregas y rutas.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <a href="/admin/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Gestión de registros</h5>
+                        <p class="text-muted small mb-0">
+                            Administrar clientes, productos, recetas y usuarios.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Últimos pedidos -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold mb-0">Últimos pedidos registrados</h5>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Fecha de entrega</th>
+                            <th>Estado</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for pedido in ultimos_pedidos %}
+                        <tr>
+                            <td>#{{ pedido.id }}</td>
+                            <td>{{ pedido.cliente.nombre }}</td>
+                            <td>{{ pedido.fecha_entrega|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if pedido.estado == 'COTIZACION' %}
+                                    <span class="badge bg-warning text-dark">Cotización</span>
+                                {% elif pedido.estado == 'CONFIRMADO' %}
+                                    <span class="badge bg-primary">Confirmado</span>
+                                {% elif pedido.estado == 'CANCELADO' %}
+                                    <span class="badge bg-danger">Cancelado</span>
+                                {% elif pedido.estado == 'ENTREGADO' %}
+                                    <span class="badge bg-success">Entregado</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ pedido.estado }}</span>
+                                {% endif %}
+                            </td>
+                            <td>${{ pedido.total|floatformat:0 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                No hay pedidos registrados.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas de inventario -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold mb-0">Alertas de inventario</h5>
+            <a href="/admin/inventario/insumo/" class="btn btn-sm btn-outline-dark">
+                Gestionar insumos
+            </a>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Stock actual</th>
+                            <th>Stock mínimo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for insumo in insumos_alerta %}
+                        <tr>
+                            <td>{{ insumo.nombre }}</td>
+                            <td>{{ insumo.stock_actual }} {{ insumo.unidad }}</td>
+                            <td>{{ insumo.stock_minimo }} {{ insumo.unidad }}</td>
+                            <td>
+                                <span class="badge bg-danger">Stock bajo</span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">
+                                No hay alertas de inventario.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

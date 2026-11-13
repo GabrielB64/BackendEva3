@@ -1,0 +1,83 @@
+
+{% extends 'web/base.html' %}
+
+{% block title %}Nuevo pedido | Dulce Arte{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Crear pedido</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="card p-4 mb-4">
+        <h5>Datos del cliente y entrega</h5>
+        {{ form.as_p }}
+    </div>
+
+    <div class="card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5>Productos del pedido</h5>
+            <button type="button" class="btn btn-outline-primary btn-sm"
+                    id="agregar-producto">
+                Agregar producto
+            </button>
+        </div>
+
+        {{ formset.management_form }}
+
+        {% if formset.non_form_errors %}
+        <div class="alert alert-danger">
+            {{ formset.non_form_errors }}
+        </div>
+        {% endif %}
+
+        <div id="detalle-forms">
+            {% for detalle in formset %}
+            <div class="border rounded p-3 mb-3 detalle-form">
+                {{ detalle.as_p }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <template id="empty-form-template">
+            <div class="border rounded p-3 mb-3 detalle-form">
+                {{ formset.empty_form.as_p }}
+            </div>
+        </template>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar cotización</button>
+    <a href="{% url 'lista_pedidos' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const agregar = document.getElementById('agregar-producto');
+const contenedor = document.getElementById('detalle-forms');
+const totalForms = document.getElementById('id_detalles-TOTAL_FORMS');
+const plantilla = document.getElementById('empty-form-template');
+
+agregar.addEventListener('click', () => {
+    const indice = Number(totalForms.value);
+    const html = plantilla.innerHTML.replaceAll('__prefix__', indice);
+
+    contenedor.insertAdjacentHTML('beforeend', html);
+    totalForms.value = indice + 1;
+
+    const nuevo = contenedor.lastElementChild;
+    nuevo.querySelectorAll('input, select, textarea').forEach(campo => {
+        if (campo.type !== 'checkbox') {
+            campo.classList.add('form-control');
+        }
+    });
+});
+
+document.querySelectorAll('.detalle-form input, .detalle-form select, .detalle-form textarea')
+    .forEach(campo => {
+        if (campo.type !== 'checkbox') {
+            campo.classList.add('form-control');
+        }
+    });
+</script>
+{% endblock %}

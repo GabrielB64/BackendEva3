@@ -1,0 +1,59 @@
+
+{% extends 'web/base.html' %}
+
+{% block title %}Nuevo cliente | Dulce Arte{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="mb-4">
+        <a href="{% url 'admin_dashboard' %}" class="text-decoration-none">
+            ← Volver al panel
+        </a>
+        <h2 class="fw-bold mt-3">Registrar cliente</h2>
+        <p class="text-muted">Ingresa los datos del nuevo cliente.</p>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+
+            <form method="post">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        Registrar cliente
+                    </button>
+
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('input, select, textarea').forEach(element => {
+    element.classList.add('form-control');
+});
+</script>
+{% endblock %}

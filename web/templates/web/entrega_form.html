@@ -1,0 +1,33 @@
+
+{% extends 'web/base.html' %}
+
+{% block title %}Crear despacho | Dulce Arte{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card p-4">
+            <h2 class="mb-4">Crear despacho</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit" class="btn btn-primary">
+                    Guardar despacho
+                </button>
+                <a href="{% url 'lista_despachos' %}"
+                   class="btn btn-secondary">
+                    Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('input, select, textarea').forEach(campo => {
+    campo.classList.add('form-control');
+});
+</script>
+{% endblock %}

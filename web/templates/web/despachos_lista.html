@@ -1,0 +1,75 @@
+
+{% extends 'web/base.html' %}
+
+{% block title %}Despachos | Dulce Arte{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Despachos</h2>
+
+    {% if user.rol == 'ADMINISTRADOR' or user.is_superuser %}
+    <a href="{% url 'crear_despacho' %}" class="btn btn-primary">
+        Crear despacho
+    </a>
+    {% endif %}
+</div>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Repartidor</th>
+                    <th>Dirección</th>
+                    <th>Fecha</th>
+                    <th>Ruta</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for despacho in despachos %}
+                <tr>
+                    <td>#{{ despacho.pedido.id }}</td>
+                    <td>{{ despacho.pedido.cliente }}</td>
+                    <td>{{ despacho.repartidor.username }}</td>
+                    <td>{{ despacho.direccion }}</td>
+                    <td>
+                        {{ despacho.fecha_entrega|date:"d/m/Y" }}
+                        {{ despacho.hora_entrega|time:"H:i" }}
+                    </td>
+                    <td>{{ despacho.orden_ruta }}</td>
+                    <td>{{ despacho.get_estado_display }}</td>
+                    <td>
+                        {% if despacho.estado == 'PENDIENTE' %}
+                        <form method="post"
+                              action="{% url 'iniciar_despacho' despacho.id %}">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-primary">
+                                Iniciar ruta
+                            </button>
+                        </form>
+                        {% elif despacho.estado == 'EN_RUTA' %}
+                        <a class="btn btn-sm btn-success"
+                           href="{% url 'confirmar_entrega' despacho.id %}">
+                            Registrar entrega
+                        </a>
+                        {% elif despacho.estado == 'ENTREGADO' %}
+                        <span class="badge bg-success">Completado</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">
+                        No hay despachos registrados.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
